@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import PhotoImage
+from PIL import Image, ImageTk
 
 class DrawingApp:
     def __init__(self, master):
@@ -31,16 +32,35 @@ class DrawingApp:
         self.stickers = []
         for i in range(1, 11):
             try:
-                sticker_image = PhotoImage(file=f'sticker{i}.png')
+                # Loading and resizing the image
+                image = Image.open(f'sticker{i}.gif')
+                resized_image = image.resize((37, 37), Image.LANCZOS)  # Resizing to 37x37 pixels
+                sticker_image = ImageTk.PhotoImage(resized_image)
                 self.stickers.append(sticker_image)
             except Exception as e:
-                print(f"Error loading sticker{i}.png: {e}")
+                print(f"Error loading sticker{i}.gif: {e}")
         
         for i, sticker_image in enumerate(self.stickers):
-            sticker_button = tk.Button(self.sticker_pallete, image=sticker_image, comand=lambda i=i: self.set_sticker(i))
+            sticker_button = tk.Button(self.sticker_pallete, image=sticker_image, command=lambda i=i: self.set_sticker(i))
             sticker_button.pack()
 
         self.selected_sticker = None
+
+        self.old_x = None
+        self.old_y = None
+
+        self.canvas.bind('<B1-Motion>', self.paint)
+        self.canvas.bind('<ButtonRelease-1>', self.reset)
+
+        for color in self.colors:
+            color_canvas = tk.Canvas(self.color_palette, bg='white', height=30, width=30)
+            color_canvas.pack(pady=5)
+            color_canvas.create_oval(5, 5, 25, 25, outline=color, fill=color)
+            color_canvas.bind('<Button-1>', lambda e, color=color: self.set_color(color))
+        
+        self.button_clear = tk.Button(self.master, text="Clear", command=self.clear_canvas)
+        self.button_clear.pack(side=tk.BOTTOM)
+
 
     def paint(self, event):
         x, y = event.x, event.y
@@ -51,42 +71,19 @@ class DrawingApp:
         self.old_x = x
         self.old_y = y
 
-    def set_sticker(self, index):
-        self.selected_sticker = index    
-
-        for color in self.colors:
-            color_canvas = tk.Canvas(self.color_palette, bg='white', height=30, width=30)
-            color_canvas.pack(pady=5)
-            color_canvas.create_oval(5, 5, 25, 25, outline=color, fill=color)
-            color_canvas.bind('<Button-1>', lambda e, color=color: self.set_color(color))
-
- 
-        self.button_clear = tk.Button(self.master, text="Clear", command=self.clear_canvas)
-        self.button_clear.pack(side=tk.BOTTOM)
-
-        self.old_x = None
-        self.old_y = None
-
-        self.canvas.bind('<B1-Motion>' , self.paint)
-        self.canvas.bind('<ButtonRelease-1>', self.reset)
-
-    def paint(self, event):
-        x, y = event.x, event.y
-        if self.old_x and self.old_y:
-            self.canvas.create_line((self.old_x, self.old_y, x, y), width=self.brush_size, fill=self.selected_color, capstyle=tk.ROUND, smooth=tk.TRUE)
-        self.old_x = x
-        self.old_y = y    
-
     def reset(self, event):
         self.old_x = None
         self.old_y = None
-
+    
     def clear_canvas(self):
         self.canvas.delete("all")
 
     def set_color(self, color):
         self.selected_color = color
-    
+
+    def set_sticker(self, index):
+        self.selected_sticker = index    
+
     def increase_brush(self):
         self.brush_size += 1
 
@@ -99,4 +96,14 @@ class DrawingApp:
 if __name__ == "__main__":
     root = tk.Tk()
     app = DrawingApp(root)
-    root.mainloop()
+    root.mainloop()    
+
+ 
+        
+    
+
+    
+
+    
+    
+   
