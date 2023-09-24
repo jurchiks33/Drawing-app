@@ -5,9 +5,24 @@ class DrawingApp:
         self.master = master
         self.master.title("Drawing App")
 
+        self.frame = tk.Frame(self.master)
+        self.frame.pack(side=tk.LEFT)
+
         self.canvas = tk.Canvas(self.master, bg="white", width=500, height=500)
         self.canvas.pack(expand=tk.YES, fill=tk.BOTH)
 
+        self.colors = ['red', 'blue', 'green', 'yellow', 'black', 'white']
+        self.selected_color = 'black'
+
+        self.color_palette = tk.Frame(self.master)
+        self.color_palette.pack(side=tk.RIGHT)
+
+        for color in self.colors:
+            color_circle = tk.Canvas(self.color_palette, bg=color, height=30, width=30)
+            color_circle.pack(pady=5)
+            color_circle.bind('<Button-1>', lambda e, color=color: self.set_color(color))
+
+ 
         self.button_clear = tk.Button(self.master, text="Clear", command=self.clear_canvas)
         self.button_clear.pack(side=tk.BOTTOM)
 
@@ -30,6 +45,9 @@ class DrawingApp:
 
     def clear_canvas(self):
         self.canvas.delete("all")
+
+    def set_color(self, color):
+        self.selected_color = color
     
 if __name__ == "__main__":
     root = tk.Tk()
