@@ -5,11 +5,8 @@ class DrawingApp:
         self.master = master
         self.master.title("Drawing App")
 
-        self.canvas = tk.canvas(self.master, bg="white", width=500, height=500)
+        self.canvas = tk.Canvas(self.master, bg="white", width=500, height=500)
         self.canvas.pack(expand=tk.YES, fill=tk.BOTH)
-
-        self.button_clear = tk.Button(self.master, text="Clear", command=self.clear_canvas)
-        self.button_clear.pack(side=tk.BOTTOM)
 
         self.button_clear = tk.Button(self.master, text="Clear", command=self.clear_canvas)
         self.button_clear.pack(side=tk.BOTTOM)
@@ -30,3 +27,11 @@ class DrawingApp:
     def reset(self, event):
         self.old_x = None
         self.old_y = None
+
+    def clear_canvas(self):
+        self.canvas.delete("all")
+    
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = DrawingApp(root)
+    root.mainloop()
