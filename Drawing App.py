@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import PhotoImage
 
 class DrawingApp:
     def __init__(self, master):
@@ -23,6 +24,25 @@ class DrawingApp:
         self.button_decrese_brush.pack()
 
         self.brush_size = 2
+
+        self.sticker_pallete = tk.Frame(self.master)
+        self.sticker_pallete.pack(side=tk.RIGHT)
+
+        self.stickers = []
+        for i in range(1, 11):
+            try:
+                sticker_image = PhotoImage(file=f'sticker{i}.png')
+                self.stickers.append(sticker_image)
+            except Exception as e:
+                print(f"Error loading sticker{i}.png: {e}")
+        
+        for i, sticker_image in enumerate(self.stickers):
+            sticker_button = tk.Button(self.sticker_pallete, image=sticker_image, comand=lambda i=i: self.set_sticker(i))
+            sticker_button.pack()
+
+        self.selected_sticker = None
+
+        
 
         for color in self.colors:
             color_canvas = tk.Canvas(self.color_palette, bg='white', height=30, width=30)
