@@ -42,7 +42,17 @@ class DrawingApp:
 
         self.selected_sticker = None
 
-        
+    def paint(self, event):
+        x, y = event.x, event.y
+        if self.selected_sticker:
+            self.canvas.create_image(x, y, image=self.stickers[self.selected_sticker])
+        elif self.old_x and self.old_y:
+            self.canvas.create_line((self.old_x, self.old_y, x, y), width=self.brush_size, fill=self.selected_color, capstyle=tk.ROUND, smooth=tk.TRUE)
+        self.old_x = x
+        self.old_y = y
+
+    def set_sticker(self, index):
+        self.selected_sticker = index    
 
         for color in self.colors:
             color_canvas = tk.Canvas(self.color_palette, bg='white', height=30, width=30)
