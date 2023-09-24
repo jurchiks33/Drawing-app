@@ -9,7 +9,7 @@ class DrawingApp:
         self.frame.pack(side=tk.LEFT)
 
         self.canvas = tk.Canvas(self.master, bg="white", width=500, height=500)
-        self.canvas.pack(expand=tk.YES, fill=tk.BOTH)
+        self.canvas.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
 
         self.colors = ['red', 'blue', 'green', 'yellow', 'black', 'white']
         self.selected_color = 'black'
@@ -18,9 +18,10 @@ class DrawingApp:
         self.color_palette.pack(side=tk.RIGHT)
 
         for color in self.colors:
-            color_circle = tk.Canvas(self.color_palette, bg=color, height=30, width=30)
-            color_circle.pack(pady=5)
-            color_circle.bind('<Button-1>', lambda e, color=color: self.set_color(color))
+            color_canvas = tk.Canvas(self.color_palette, bg='white', height=30, width=30)
+            color_canvas.pack(pady=5)
+            color_canvas.create_oval(5, 5, 25, 25, outline=color, fill=color)
+            color_canvas.bind('<Button-1>', lambda e, color=color: self.set_color(color))
 
  
         self.button_clear = tk.Button(self.master, text="Clear", command=self.clear_canvas)
@@ -35,7 +36,7 @@ class DrawingApp:
     def paint(self, event):
         x, y = event.x, event.y
         if self.old_x and self.old_y:
-            self.canvas.create_line((self.old_x, self.old_y, x, y), width=2, capstyle=tk.ROUND, smooth=tk.TRUE)
+            self.canvas.create_line((self.old_x, self.old_y, x, y), width=2, fill=self.selected_color, capstyle=tk.ROUND, smooth=tk.TRUE)
         self.old_x = x
         self.old_y = y    
 
