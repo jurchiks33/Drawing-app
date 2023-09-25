@@ -51,7 +51,7 @@ class DrawingApp:
         self.old_x = None
         self.old_y = None
 
-        self.canvas.bind('<B1-Motion>', self.paint)
+        self.canvas.bind('<Button-1>', self.paint)
         self.canvas.bind('<ButtonRelease-1>', self.reset)
 
         for color in self.colors:
@@ -66,9 +66,9 @@ class DrawingApp:
 
     def paint(self, event):
         x, y = event.x, event.y
-        if self.selected_sticker:
+        if self.selected_sticker is not None:
             self.canvas.create_image(x, y, image=self.stickers[self.selected_sticker])
-        elif self.old_x and self.old_y:
+        elif self.old_x is not None and self.old_y is not None:
             self.canvas.create_line((self.old_x, self.old_y, x, y), width=self.brush_size, fill=self.selected_color, capstyle=tk.ROUND, smooth=tk.TRUE)
         self.old_x = x
         self.old_y = y
