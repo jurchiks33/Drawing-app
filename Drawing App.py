@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import PhotoImage
 from PIL import Image, ImageTk
 
 class DrawingApp:
@@ -53,6 +52,7 @@ class DrawingApp:
 
         self.canvas.bind('<Button-1>', self.paint)
         self.canvas.bind('<ButtonRelease-1>', self.reset)
+        self.canvas.bind('<B1-Motion>', self.paint_continuous)
 
         for color in self.colors:
             color_canvas = tk.Canvas(self.color_palette, bg='white', height=30, width=30)
@@ -69,6 +69,13 @@ class DrawingApp:
         if self.selected_sticker is not None:
             self.canvas.create_image(x, y, image=self.stickers[self.selected_sticker])
         elif self.old_x is not None and self.old_y is not None:
+            self.canvas.create_line((self.old_x, self.old_y, x, y), width=self.brush_size, fill=self.selected_color, capstyle=tk.ROUND, smooth=tk.TRUE)
+        self.old_x = x
+        self.old_y = y
+
+    def paint_continuous(self,event):
+        x, y = event.x, event.y
+        if self.selected_sticker is None and self.old_x is not None and self.old_y is not None:
             self.canvas.create_line((self.old_x, self.old_y, x, y), width=self.brush_size, fill=self.selected_color, capstyle=tk.ROUND, smooth=tk.TRUE)
         self.old_x = x
         self.old_y = y
