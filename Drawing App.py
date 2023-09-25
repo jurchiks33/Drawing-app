@@ -30,22 +30,21 @@ class DrawingApp:
         self.sticker_pallete.pack(side=tk.RIGHT)
 
         self.stickers = []
-        for i in range(1, 11):
+        self.sticker_buttons = []
+        for i in range(10):
             try:
-                # Loading and resizing the image
-                image = Image.open(f'sticker{i}.gif')
-                resized_image = image.resize((37, 37), Image.LANCZOS)  # Resizing to 37x37 pixels
+                image = Image.open(f'sticker{i+1}.gif')
+                resized_image = image.resize((37, 37), Image.LANCZOS)  
                 sticker_image = ImageTk.PhotoImage(resized_image)
                 self.stickers.append(sticker_image)
+                sticker_button = tk.Button(self.sticker_pallete, image=sticker_image, command=lambda i=i: self.set_sticker(i))
+                sticker_button.pack()
+                self.sticker_buttons.append(sticker_button)
             except Exception as e:
                 print(f"Error loading sticker{i}.gif: {e}")
-        
+
         self.pen_button = tk.Button(self.sticker_pallete, text="Pen", command=self.set_pen)
         self.pen_button.pack()
-        
-        for i, sticker_image in enumerate(self.stickers):
-            sticker_button = tk.Button(self.sticker_pallete, image=sticker_image, command=lambda i=i: self.set_sticker(i))
-            sticker_button.pack()
 
         self.selected_sticker = None
 
@@ -86,9 +85,11 @@ class DrawingApp:
 
     def set_sticker(self, index):
         self.selected_sticker = index 
+        print(f"Sticker {index} selected")
 
     def set_pen(self):
-        self.selected_sticker = None   
+        self.selected_sticker = None
+        print(f"Pen selected")   
 
     def increase_brush(self):
         self.brush_size += 1
