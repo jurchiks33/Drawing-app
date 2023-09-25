@@ -40,6 +40,9 @@ class DrawingApp:
             except Exception as e:
                 print(f"Error loading sticker{i}.gif: {e}")
         
+        self.pen_button = tk.Button(self.sticker_pallete, text="Pen", command=self.set_pen)
+        self.pen_button.pack()
+        
         for i, sticker_image in enumerate(self.stickers):
             sticker_button = tk.Button(self.sticker_pallete, image=sticker_image, command=lambda i=i: self.set_sticker(i))
             sticker_button.pack()
@@ -82,7 +85,10 @@ class DrawingApp:
         self.selected_color = color
 
     def set_sticker(self, index):
-        self.selected_sticker = index    
+        self.selected_sticker = index 
+
+    def set_pen(self):
+        self.selected_sticker = None   
 
     def increase_brush(self):
         self.brush_size += 1
